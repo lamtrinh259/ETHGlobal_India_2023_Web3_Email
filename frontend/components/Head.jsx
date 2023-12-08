@@ -1,4 +1,11 @@
+import { ConnectButton, WalletButton } from "@rainbow-me/rainbowkit";
+
+import { useConnect } from "wagmi";
+
 export default function Head() {
+  const { connect, connectors, error, isLoading, pendingConnector } =
+    useConnect();
+
   return (
     <header className="sticky top-0 w-full font-primary bg-opacity-30 transition duration-300 ease-in-out bg-black z-10 backdrop-filter backdrop-blur-lg">
       <nav className="container mx-auto px-6 py-3">
@@ -13,12 +20,9 @@ export default function Head() {
             <a href="#" className="text-gray-400 hover:text-blue-600">
               Features
             </a>
-            <button
-              type="button "
-              className=" bg-white  hover:bg-gray-900 hover:text-white focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm p-3"
-            >
-              Connect Wallet
-            </button>
+            <ConnectButton />
+            {/* <WalletButton wallet="metamask" />
+            <WalletButton wallet="walletconnect" /> */}
           </div>
           <div className="md:hidden flex items-center">
             <button className="text-white focus:outline-none">

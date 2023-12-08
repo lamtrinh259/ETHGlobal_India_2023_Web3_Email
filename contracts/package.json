@@ -1,0 +1,11 @@
+{
+  "name": "cipher-inbox-contracts",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.19.2"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "4.9",
+    "@remix-project/remixd": "^0.6.20"
+  }
+}

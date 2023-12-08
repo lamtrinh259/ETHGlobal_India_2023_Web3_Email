@@ -1,52 +1,50 @@
 export default function Head() {
   return (
-    <header class="bg-white bg-opacity-5 text-white shadow-lg hidden md:block ">
-      <div class="container mx-auto flex items-center h-24">
-        <a href="" class="flex items-center justify-center">
-          <img
-            class="h-16"
-            src="https://i.ibb.co/6Yxs70d/2021-10-26-23h27-03.png"
-            alt=""
-          />
-          <span class="ml-4 uppercase font-black">
-            clara
-            <br />
-            thella
-          </span>
-        </a>
-        <nav class="contents font-semibold text-base lg:text-lg">
-          <ul class="mx-auto flex items-center">
-            <li class="p-5 xl:p-8 active">
-              <a href="">
-                <span>Home</span>
-              </a>
-            </li>
-            <li class="p-5 xl:p-8">
-              <a href="">
-                <span>About</span>
-              </a>
-            </li>
-            <li class="p-5 xl:p-8">
-              <a href="">
-                <span>Projects</span>
-              </a>
-            </li>
-            <li class="p-5 xl:p-8">
-              <a href="">
-                <span>Services</span>
-              </a>
-            </li>
-            <li class="p-5 xl:p-8">
-              <a href="">
-                <span>Blog</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
-        <button class="border border-white rounded-full font-bold px-8 py-2">
-          Contact me
-        </button>
-      </div>
+    <header className="sticky top-0 w-full md:bg-opacity-90 transition duration-300 ease-in-out bg-neutral-900 z-10">
+      <nav className="container mx-auto px-6 py-3">
+        <div className="flex justify-between items-center">
+          <a href="#" className="text-2xl font-bold text-white">
+            MyWebsite
+          </a>
+          <div className="hidden md:flex items-center space-x-4">
+            <a href="#" className="text-white hover:text-blue-600">
+              Home
+            </a>
+            <a href="#" className="text-white hover:text-blue-600">
+              About
+            </a>
+            <a href="#" className="text-white hover:text-blue-600">
+              Services
+            </a>
+            <a href="#" className="text-white hover:text-blue-600">
+              Contact
+            </a>
+            <a href="#" className="bg-blue-600 text-white px-4 py-2 rounded-md">
+              Sign Up
+            </a>
+          </div>
+          <div className="md:hidden flex items-center">
+            <button className="text-white focus:outline-none">
+              {" "}
+              {/* Add a hamburger menu icon here */}
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </nav>
     </header>
   );
 }

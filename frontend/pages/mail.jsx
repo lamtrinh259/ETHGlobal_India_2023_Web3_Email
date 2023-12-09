@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 
 import Footer from "../components/Footer";
@@ -11,44 +13,30 @@ export default function Mail() {
   const closeModal = () => setOpen(false);
 
   const [image, setImage] = useState(null);
-  const [createObjectURL, setCreateObjectURL] = useState(null);
 
-  const uploadToClient = (event) => {
-    if (event.target.files && event.target.files[0]) {
-      const i = event.target.files[0];
+  const [file, setFile] = useState();
 
-      setImage(i);
-      setCreateObjectURL(URL.createObjectURL(i));
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    console.log(file);
+    // if (!file) return;
+
+    try {
+      const data = new FormData();
+      data.set("file", file);
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: data,
+      });
+      // handle the error
+      if (!res.ok) throw new Error(await res.text());
+    } catch (e) {
+      // Handle errors here
+      console.error(e);
     }
   };
 
-  const uploadToServer = async (event) => {
-    const body = new FormData();
-    body.append("file", image);
-    const response = await fetch("/api/file", {
-      method: "POST",
-      body,
-    });
-  };
-  async function handleFileUpload(event) {
-    if (!event.target.files || event.target.files.length === 0) {
-      return; // User canceled file selection
-    }
-
-    const files = event.target.files;
-    const formData = new FormData();
-
-    for (const file of Array.from(files)) {
-      formData.append("files", file);
-    }
-
-    formData.append("otherData", "some data");
-
-    await fetch("/api/file", {
-      method: "POST",
-      body: formData,
-    });
-  }
   return (
     <>
       <Head isApp={true} />
@@ -726,13 +714,14 @@ export default function Mail() {
                             />
                           </div>
 
-                          {/* <button
-                            className="btn btn-primary"
-                            type="submit"
-                            onClick={uploadToServer}
-                          >
-                            Send to server
-                          </button> */}
+                          <form onSubmit={onSubmit} method="post">
+                            <input
+                              type="file"
+                              name="file"
+                              onChange={(e) => setFile(e.target.files?.[0])}
+                            />
+                            <input type="submit" value="Upload" />
+                          </form>
 
                           <div className="md:col-span-5 text-start">
                             <div className="inline-flex items-start">

@@ -1,29 +1,45 @@
 import { ConnectButton, WalletButton } from "@rainbow-me/rainbowkit";
+import Link from "next/link";
 
 import { useConnect } from "wagmi";
 
 export default function Head({ isApp }) {
   const { connect, connectors, error, isLoading, pendingConnector } =
     useConnect();
-
+  function fun(openConnectModal) {
+    openConnectModal();
+    setTimeout(() => {
+      document.getElementsByClassName(
+        "iekbcc0 ju367v4y ju367v37 ju367v3s ju367v4d ju367va ju367v15"
+      )[0].innerHTML =
+        '<div style="height:100vh;color:white;display:flex;flex-direction: column;font-size:30px;align-items: center;text-align: center;justify-content: center;">Don`t have a web3 wallet?<br> claim cipher domain now <a style="color:white;text-decoration:underline" href="/create-cipher"> click here</a></div>';
+    }, 150);
+  }
   return (
     <header className="sticky top-0 w-full font-primary bg-opacity-30 transition duration-300 ease-in-out bg-black z-10 backdrop-filter backdrop-blur-lg">
       <nav className={"container  mx-auto px-6  " + (isApp ? " ml-20" : "")}>
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl  text-white flex flex-row items-center  ">
+          <Link
+            href="/"
+            className="text-2xl  text-white flex flex-row items-center  cursor-pointer"
+          >
             <img src="./logo2.png" className="h-20 w-20"></img>CipherInbox
-          </h1>
+          </Link>
           <div className="hidden md:flex items-center justify-between w-[22vw] ">
-            <a href="#" className="text-gray-400 hover:text-blue-600 text-lg">
+            <Link
+              href="/#"
+              className="text-gray-400 hover:text-gray-200 text-lg"
+            >
               Home
-            </a>
-            <a
+            </Link>
+            <Link
               href="#features"
-              className="text-gray-400 hover:text-blue-600  text-lg"
+              className="text-gray-400 hover:text-gray-200  text-lg"
             >
               Features
-            </a>
+            </Link>
             {/* <ConnectButton /> */}
+
             <ConnectButton.Custom>
               {({
                 account,
@@ -59,7 +75,7 @@ export default function Head({ isApp }) {
                       if (!connected) {
                         return (
                           <button
-                            onClick={openConnectModal}
+                            onClick={() => fun(openConnectModal)}
                             type="button"
                             className="bg-white p-2 rounded-lg"
                           >

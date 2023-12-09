@@ -31,6 +31,8 @@ import {
 import { publicProvider } from "wagmi/providers/public";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { oktoWallet } from "@rainbow-me/rainbowkit/wallets";
+import { InjectedConnector } from "@wagmi/core";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [
@@ -56,13 +58,26 @@ const { wallets } = getDefaultWallets({
 const demoAppInfo = {
   appName: "CipherInbox",
 };
-
 const connectors = connectorsForWallets([
   {
     groupName: "Popular",
     wallets: [
       metaMaskWallet({ projectId, chains }),
       walletConnectWallet({ projectId, chains }),
+      oktoWallet({
+        chains,
+        projectId,
+        walletConnectOptions: {
+          projectId,
+          metadata: {
+            name: "CipherInbox", //mandatory
+            description: "Cipher Inbox",
+            url: "http://localhost:3000",
+            icons: ["DAPP_ICON"],
+          },
+        },
+        walletConnectVersion: "2",
+      }),
     ],
   },
 ]);

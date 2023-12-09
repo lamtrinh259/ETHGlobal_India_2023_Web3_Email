@@ -8,12 +8,12 @@ export default function Head({ isApp }) {
     useConnect();
   function fun(openConnectModal) {
     openConnectModal();
-    setTimeout(() => {
-      document.getElementsByClassName(
-        "iekbcc0 ju367v4y ju367v37 ju367v3s ju367v4d ju367va ju367v15"
-      )[0].innerHTML =
-        '<div style="height:100vh;color:white;display:flex;flex-direction: column;font-size:30px;align-items: center;text-align: center;justify-content: center;">Don`t have a web3 wallet?<br> claim cipher domain now <a style="color:white;text-decoration:underline" href="/create-cipher"> click here</a></div>';
-    }, 150);
+    // setTimeout(() => {
+    //   document.getElementsByClassName(
+    //     "iekbcc0 ju367v4y ju367v37 ju367v3s ju367v4d ju367va ju367v15"
+    //   )[0].innerHTML =
+    //     '<div style="height:100vh;color:white;display:flex;flex-direction: column;font-size:30px;align-items: center;text-align: center;justify-content: center;">Don`t have a web3 wallet?<br> create a okto wallet now  <a style="color:white;text-decoration:underline" href="/create-cipher"> click here</a></div>';
+    // }, 150);
   }
   return (
     <header className="sticky top-0 w-full font-primary bg-opacity-30 transition duration-300 ease-in-out bg-black z-10 backdrop-filter backdrop-blur-lg">

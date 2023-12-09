@@ -8,7 +8,7 @@ import {
 import { waitForRemotePeer } from '@waku/sdk';
 import protobuf from 'protobufjs';
 import { shareToFileCoin } from 'src/utils/ShareToFileCoin';
-
+import { xmtpUtil } from 'src/utils/XmtpHelper';
 export interface Email {
   from: string;
   to: string;
@@ -26,5 +26,7 @@ export class EmailNotificationService {
         attachment = await shareToFileCoin(attachment, email.to);
       });
     }
+    await xmtpUtil(email);
+    return;
   }
 }

@@ -6,15 +6,15 @@ import SidebarDrawer from "../components/SidebarDrawer";
 export default function Mail() {
   return (
     <>
-      <Head />
+      <Head isApp={true} />
       <div className="">
         <SidebarDrawer />
-        <div className="h-screen overflow-hidden w-full absolute top-10 left-14  shadow-xl rounded-lg flex overflow-x-auto custom-scrollbar container mx-auto px-6 py-3">
+        <div className="h-screen overflow-hidden w-full absolute top-12 left-14  shadow-xl rounded-lg flex overflow-x-auto custom-scrollbar container mx-auto px-6 py-3">
           <div className="w-64 px-4 ">
             <div className="h-16 flex items-center">
               <a
                 href="#"
-                className="w-48 mx-auto bg-blue-600 hover:bg-blue-700 flex items-center justify-center text-gray-100 py-2 rounded space-x-2 transition duration-150"
+                className="w-48 mx-auto bg-white  flex items-center justify-center text-black py-2 rounded space-x-2 transition duration-150"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -202,7 +202,7 @@ export default function Mail() {
             </div>
           </div>
           <div
-            className="flex-1 px-2"
+            className="flex-1 px-2 "
             x-data="{ checkAll: false, filterMessages: false }"
           >
             <div className="h-16 flex items-center justify-between">
@@ -210,9 +210,10 @@ export default function Mail() {
                 {/* <span className="text-sm text-gray-500">1-15 of 1,323</span> */}
               </div>
             </div>
-            <div className="text-white   bg-black">
+            <div className="text-white    bg-black">
+              <span className="text-2xl ">Inbox</span>
               <ul>
-                <li className="flex items-center border-y hover:bg-gray-900   px-2 ">
+                <li className="flex items-center border-y hover:bg-gray-900  mt-5 px-2 ">
                   <input
                     type="checkbox"
                     className="focus:ring-0 border-1 border-gray-400"
@@ -356,7 +357,7 @@ export default function Mail() {
           </div>
         </div>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

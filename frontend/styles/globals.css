@@ -56,7 +56,8 @@ hr {
 }
 
 .ps-menu-button:hover {
-    background-color: rgb(17, 24, 39) !important;
+    background-color: rgba(255, 255, 255, 0.161) !important;
+
 }
 
 .ps-sidebar-root-test-id {

@@ -1,20 +1,26 @@
+import { useState } from "react";
+
 import Footer from "../components/Footer";
 import Head from "../components/Head";
 
 import SidebarDrawer from "../components/SidebarDrawer";
+import Popup from "reactjs-popup";
 
 export default function Mail() {
+  const [open, setOpen] = useState(false);
+  const closeModal = () => setOpen(false);
   return (
     <>
       <Head isApp={true} />
       <div className="">
         <SidebarDrawer />
+
         <div className="h-screen overflow-hidden w-full absolute top-12 left-14  shadow-xl rounded-lg flex overflow-x-auto custom-scrollbar container mx-auto px-6 py-3">
           <div className="w-64 px-4 ">
             <div className="h-16 flex items-center">
               <a
-                href="#"
-                className="w-48 mx-auto bg-white  flex items-center justify-center text-black py-2 rounded space-x-2 transition duration-150"
+                onClick={() => setOpen((o) => !o)}
+                className="cursor-pointer w-48 mx-auto bg-white  flex items-center justify-center text-black py-2 rounded space-x-2 transition duration-150"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -355,6 +361,74 @@ export default function Mail() {
               </ul>
             </div>
           </div>
+          <Popup open={open} closeOnDocumentClick onClose={closeModal}>
+            <div className="p-6 w-[35%] flex items-center justify-center bottom-0 right-0 fixed mb-0 pt-0">
+              <div className="container max-w-screen-lg mx-auto">
+                <div className="bg-gray-100 flex justify-between flex-row w-[100%] top-0 p-2 px-4 font-bold">
+                  <div>New Message </div>
+                  <div
+                    className="cursor-pointer text-red-500 font-normal"
+                    onClick={closeModal}
+                  >
+                    X
+                  </div>
+                </div>
+                <div>
+                  <div className="bg-white rounded shadow-lg   p-4  mb-6">
+                    <div className=" text-sm grid-cols-1 lg:grid-cols-3">
+                      <div className="lg:col-span-2">
+                        <div className=" text-sm grid-cols-1 md:grid-cols-5">
+                          <div className="md:col-span-5">
+                            <label htmlFor="full_name">To</label>
+                            <input
+                              type="text"
+                              name="full_name"
+                              id="full_name"
+                              className="h-10 border mt-1 rounded px-2 w-full bg-gray-50"
+                              defaultValue=""
+                              placeholder="email@domain.com"
+                            />
+                          </div>
+                          <div className="md:col-span-5">
+                            <label htmlFor="email">Subject</label>
+                            <input
+                              type="text"
+                              name="email"
+                              id="email"
+                              className="h-10 border mt-1 rounded px-2 w-full bg-gray-50"
+                              defaultValue=""
+                            />
+                          </div>
+
+                          <div className="md:col-span-2">
+                            <label htmlFor="country">Message</label>
+
+                            <div
+                              contentEditable
+                              type="text"
+                              name="zipcode"
+                              id="zipcode"
+                              className="transition-all  flex items-start justify-start flex-col border  rounded px-2 w-full bg-gray-50 h-52"
+                              placeholder=""
+                              defaultValue=""
+                            />
+                          </div>
+
+                          <div className="md:col-span-5 text-start">
+                            <div className="inline-flex items-start">
+                              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                Send
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Popup>
         </div>
       </div>
       {/* <Footer /> */}

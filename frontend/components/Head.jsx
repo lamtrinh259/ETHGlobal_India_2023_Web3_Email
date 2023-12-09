@@ -75,7 +75,7 @@ export default function Head({ isApp }) {
                           <button
                             onClick={openChainModal}
                             type="button"
-                            className="bg-white"
+                            className="bg-white p-2 rounded-lg"
                           >
                             Wrong network
                           </button>
@@ -84,7 +84,7 @@ export default function Head({ isApp }) {
 
                       return (
                         <div
-                          className="bg-white"
+                          className="bg-white p-2  rounded-lg"
                           style={{
                             display: "flex",
                             gap: 12,
@@ -119,7 +119,6 @@ export default function Head({ isApp }) {
                                 )}
                               </div>
                             )}
-                            {chain.name}
                           </button>
 
                           <button onClick={openAccountModal} type="button">

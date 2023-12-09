@@ -26,3 +26,44 @@ img {
     max-width: 100%;
     height: auto;
 }
+
+.menu-anchor:hover {
+    background-color: #cafce1 !important;
+    font-weight: bolder;
+}
+
+.menu-label {
+    font-size: 13px;
+}
+
+button {
+    right: 20px;
+}
+
+hr {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    opacity: 0.15;
+}
+
+
+.ps-menu-button {
+    padding-left: 30px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    ;
+}
+
+.ps-menu-button:hover {
+    background-color: rgb(17, 24, 39) !important;
+}
+
+.ps-sidebar-root-test-id {
+    border: none !important;
+    border-right: 0px !important;
+}
+
+.css-1wvake5 {
+    border-right-width: 0px !important;
+}

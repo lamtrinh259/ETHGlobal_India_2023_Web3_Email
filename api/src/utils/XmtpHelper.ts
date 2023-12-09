@@ -5,7 +5,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 export const xmtpUtil = async () => {
-  const wallet = new Wallet(process.env.OWN_P_KEY);
+  const wallet = new Wallet(process.env.METAMASK_PUBLIC_KEY);
   console.log('Wallet address: ' + wallet.address);
 
   const xmtp = await Client.create(wallet, { env: 'production' });

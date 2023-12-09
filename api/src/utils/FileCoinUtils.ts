@@ -1,5 +1,3 @@
-import * as dotenv from 'dotenv';
-dotenv.config();
 import { ethers } from 'ethers';
 import lighthouse from '@lighthouse-web3/sdk';
 

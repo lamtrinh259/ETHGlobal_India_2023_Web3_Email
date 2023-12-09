@@ -5,16 +5,15 @@
 // will compile your contracts, add the Hardhat Runtime Environment's members to the
 // global scope, and execute the script.
 const hre = require("hardhat");
+const { ethers } = require("hardhat");
 
 async function main() {
-
-  const lock = await hre.ethers.deployContract("CipherInboxRegistry", ['0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266','0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266']);
-
-  let contract = await lock.waitForDeployment();
-
-  console.log(
-    contract.getAddress()
-  );
+  let [defaultAdmin] = await ethers.getSigners();
+  // console.log(defaultAdmin.address, minter.address, otherAccount.address)
+  const CipherInboxRegistry = await ethers.getContractFactory("CipherInboxRegistry");
+  let cipherInboxRegistry = await CipherInboxRegistry.deploy(defaultAdmin.address, defaultAdmin.address);
+  let context = await cipherInboxRegistry.waitForDeployment();
+  console.log(context)
 }
 
 // We recommend this pattern to be able to use async/await everywhere

@@ -8,21 +8,19 @@ export default function Head({ isApp }) {
 
   return (
     <header className="sticky top-0 w-full font-primary bg-opacity-30 transition duration-300 ease-in-out bg-black z-10 backdrop-filter backdrop-blur-lg">
-      <nav
-        className={"container  mx-auto px-6 py-4 " + (isApp ? " ml-20" : "")}
-      >
+      <nav className={"container  mx-auto px-6  " + (isApp ? " ml-20" : "")}>
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl  text-white  ">
-            <span className="bg-gradient-to-r from-green-300 text-4xl via-blue-500 to-purple-200  bg-clip-text text-transparent">
-              C
-            </span>
-            ipherInbox
+          <h1 className="text-2xl  text-white flex flex-row items-center  ">
+            <img src="./logo2.png" className="h-20 w-20"></img>CipherInbox
           </h1>
           <div className="hidden md:flex items-center justify-between w-[22vw] ">
-            <a href="#" className="text-gray-400 hover:text-blue-600">
+            <a href="#" className="text-gray-400 hover:text-blue-600 text-lg">
               Home
             </a>
-            <a href="#" className="text-gray-400 hover:text-blue-600">
+            <a
+              href="#features"
+              className="text-gray-400 hover:text-blue-600  text-lg"
+            >
               Features
             </a>
             {/* <ConnectButton /> */}

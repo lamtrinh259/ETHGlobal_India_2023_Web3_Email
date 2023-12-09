@@ -18,8 +18,8 @@ export const shareToFileCoin = async (buffer, to) => {
     );
     console.log(uploadResponse);
     const cid = uploadResponse.data.Hash;
-    const publicKey = process.env.PUBLIC_KEY;
-    const privateKey = process.env.PRIVATE_KEY;
+    const publicKey = process.env.FILECOIN_PUBLIC_KEY;
+    const privateKey = process.env.FILECOIN_PRIVATE_KEY;
     const signedMessage = await signAuthMessage(privateKey);
 
     const shareResponse = await lighthouse.shareFile(

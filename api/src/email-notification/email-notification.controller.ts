@@ -4,6 +4,7 @@ import { SendEmailDto } from './dto/email-dto';
 import { Result, left, right } from 'src/utils/Result';
 import { GenerateEmailIdDto } from './dto/generate-email-id.dto';
 import { uploadEmailsToFileCoins } from 'src/utils/FileCoinUtils';
+import EthersHelper from 'src/utils/EthersUtils';
 
 @Controller('email-notification')
 export class EmailNotificationController {
@@ -11,10 +12,8 @@ export class EmailNotificationController {
   @Post('send-email')
   async sendEmail(@Body() email: SendEmailDto) {
     try {
-      const { message, subject } = email;
-      await this.emailNotificationService.sendEmail(email);
-
-      return right(Result.ok<string>('yew'));
+      const result = await this.emailNotificationService.sendEmail(email);
+      return right(Result.ok(result));
     } catch (error) {
       console.log(error);
       return left(Result.fail(error));

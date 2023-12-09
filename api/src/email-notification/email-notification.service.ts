@@ -1,5 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
+import EthersHelper from 'src/utils/EthersUtils';
 import {
   uploadAttachmentsToFileCoin,
   uploadEmailsToFileCoins,
@@ -16,7 +17,10 @@ export interface Email {
 
 @Injectable()
 export class EmailNotificationService {
-  constructor(private readonly httpService: HttpService) {}
+  private ethersUtil: EthersHelper;
+  constructor(private readonly httpService: HttpService) {
+    this.ethersUtil = new EthersHelper();
+  }
   async sendEmail(email: Email) {
     if (email.attachments?.length) {
       for (let id = 0; id < email.attachments.length; id++) {
@@ -24,14 +28,20 @@ export class EmailNotificationService {
         element = await uploadAttachmentsToFileCoin(element, email.to);
       }
     }
-    await xmtpUtil(email);
-    // to fetch from and to wllet detaild from DB
-    await uploadEmailsToFileCoins(
+    console.log(email.subject);
+    const cid = await uploadEmailsToFileCoins(
       { message: email.message, subject: email.subject },
       email.to,
       email.from,
     );
-    return;
+    //web3 mail sending
+    if (email.to.split('@').includes('cipher-inbox.com')) {
+      await xmtpUtil(email);
+    } else {
+      //web 2 mail sending
+    }
+    await this.ethersUtil.triggerNewEmailEvent(email.to, cid);
+    // to fetch from and to wllet detaild from DB
   }
   generateEmailId(id) {
     //generate email id and push to blockchain

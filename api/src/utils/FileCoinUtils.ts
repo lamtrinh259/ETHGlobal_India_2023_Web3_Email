@@ -3,7 +3,7 @@ import lighthouse from '@lighthouse-web3/sdk';
 const jwt = require('jsonwebtoken');
 
 const signAuthMessage = async (privateKey) => {
-  const provider = new ethers.JsonRpcProvider();
+  const provider = new ethers.providers.StaticJsonRpcProvider();
   const signer = new ethers.Wallet(privateKey, provider);
   const signedMessage = await signer.signMessage(process.env.FILECOIN_API_KEY);
   return signedMessage;
@@ -43,28 +43,22 @@ export const uploadEmailsToFileCoins = async (data, to, from) => {
   );
   const cid = uploadResponse.data.Hash;
   console.log(cid);
-  const publicKey = process.env.FILECOIN_PUBLIC_KEY;
-  const privateKey = process.env.FILECOIN_PRIVATE_KEY;
-  const signedMessage = await signAuthMessage(privateKey);
-  const shareResponse = await lighthouse.shareFile(
-    publicKey,
-    [to, from],
-    cid,
-    signedMessage,
-  );
-  console.log(shareResponse);
+  if (to && from) {
+    const publicKey = process.env.FILECOIN_PUBLIC_KEY;
+    const privateKey = process.env.FILECOIN_PRIVATE_KEY;
+    const signedMessage = await signAuthMessage(privateKey);
+    const shareResponse = await lighthouse.shareFile(
+      publicKey,
+      [to, from],
+      cid,
+      signedMessage,
+    );
+    console.log(shareResponse);
+  }
+
   // ShareFile: Lighthouse function to securely share your file
   return {
     cid,
     url: `https://files.lighthouse.storage/viewFile/${cid}`,
   };
-};
-
-export const fileInfo = async () => {
-  /*
-    @param {string} cid - cid of file.
-  */
-  const cid = 'QmUbtv8pbdShGSgcQd4g6CiDGXz9aMiZVCuVdNBTh9c9Vk';
-  const fileInfo = await lighthouse.getFileInfo(cid);
-  console.log(fileInfo);
 };

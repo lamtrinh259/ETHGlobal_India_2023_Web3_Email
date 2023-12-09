@@ -6,9 +6,9 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 contract CipherInboxRegistry is ERC721, ERC721URIStorage {
     mapping(uint256 => string) private _tokenNames;
-    mapping(address => bool) public hasSbtMinted;
+    mapping(address => uint256) private tokenByAddress;
 
-
+ 
     constructor() ERC721("Cipher Inbox SBT", "CIS") {
     }
 
@@ -18,7 +18,7 @@ contract CipherInboxRegistry is ERC721, ERC721URIStorage {
     }
 
     modifier onlyOnce(){
-        require(!hasSbtMinted[msg.sender],"you can only own one cipher inbox");
+        require(tokenByAddress[msg.sender]==0,"you can only own one cipher inbox");
         _;
     }
 
@@ -27,6 +27,9 @@ contract CipherInboxRegistry is ERC721, ERC721URIStorage {
         return _tokenNames[tokenId];
     }
 
+    function getTokenIdByAddress(address sender) public view returns (uint256) {
+        return tokenByAddress[sender];
+    }
 
     function safeMint(string memory name, string memory uri)
         public
@@ -36,11 +39,11 @@ contract CipherInboxRegistry is ERC721, ERC721URIStorage {
         _safeMint(msg.sender, tokenId);
         _setTokenURI(tokenId, uri);
         _tokenNames[tokenId] = name;
-        hasSbtMinted[msg.sender] = true;
+        tokenByAddress[msg.sender] = tokenId;
     }
 
     function setTokenUri(uint256 tokenId, string memory uri) public onlyTokenOwner(tokenId){
-        _setTokenURI(tokenId, uri);
+        _setTokenURI(tokenId, uri); 
     }
 
     // Convert a name to a unique tokenId

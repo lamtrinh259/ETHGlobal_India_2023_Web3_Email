@@ -1,27 +1,139 @@
-export default function Head() {
+import { ConnectButton, WalletButton } from "@rainbow-me/rainbowkit";
+
+import { useConnect } from "wagmi";
+
+export default function Head({ isApp }) {
+  const { connect, connectors, error, isLoading, pendingConnector } =
+    useConnect();
+
   return (
-    <header className="sticky top-0 w-full md:bg-opacity-90 transition duration-300 ease-in-out bg-neutral-900 z-10">
-      <nav className="container mx-auto px-6 py-3">
+    <header className="sticky top-0 w-full font-primary bg-opacity-30 transition duration-300 ease-in-out bg-black z-10 backdrop-filter backdrop-blur-lg">
+      <nav className={"container  mx-auto px-6  " + (isApp ? " ml-20" : "")}>
         <div className="flex justify-between items-center">
-          <a href="#" className="text-2xl font-bold text-white">
-            MyWebsite
-          </a>
-          <div className="hidden md:flex items-center space-x-4">
-            <a href="#" className="text-white hover:text-blue-600">
+          <h1 className="text-2xl  text-white flex flex-row items-center  ">
+            <img src="./logo2.png" className="h-20 w-20"></img>CipherInbox
+          </h1>
+          <div className="hidden md:flex items-center justify-between w-[22vw] ">
+            <a href="#" className="text-gray-400 hover:text-blue-600 text-lg">
               Home
             </a>
-            <a href="#" className="text-white hover:text-blue-600">
-              About
+            <a
+              href="#features"
+              className="text-gray-400 hover:text-blue-600  text-lg"
+            >
+              Features
             </a>
-            <a href="#" className="text-white hover:text-blue-600">
-              Services
-            </a>
-            <a href="#" className="text-white hover:text-blue-600">
-              Contact
-            </a>
-            <a href="#" className="bg-blue-600 text-white px-4 py-2 rounded-md">
-              Sign Up
-            </a>
+            {/* <ConnectButton /> */}
+            <ConnectButton.Custom>
+              {({
+                account,
+                chain,
+                openAccountModal,
+                openChainModal,
+                openConnectModal,
+                authenticationStatus,
+                mounted,
+              }) => {
+                // Note: If your app doesn't use authentication, you
+                // can remove all 'authenticationStatus' checks
+                const ready = mounted && authenticationStatus !== "loading";
+                const connected =
+                  ready &&
+                  account &&
+                  chain &&
+                  (!authenticationStatus ||
+                    authenticationStatus === "authenticated");
+
+                return (
+                  <div
+                    {...(!ready && {
+                      "aria-hidden": true,
+                      style: {
+                        opacity: 0,
+                        pointerEvents: "none",
+                        userSelect: "none",
+                      },
+                    })}
+                  >
+                    {(() => {
+                      if (!connected) {
+                        return (
+                          <button
+                            onClick={openConnectModal}
+                            type="button"
+                            className="bg-white p-2 rounded-lg"
+                          >
+                            Connect Wallet
+                          </button>
+                        );
+                      }
+
+                      if (chain.unsupported) {
+                        return (
+                          <button
+                            onClick={openChainModal}
+                            type="button"
+                            className="bg-white p-2 rounded-lg"
+                          >
+                            Wrong network
+                          </button>
+                        );
+                      }
+
+                      return (
+                        <div
+                          className="bg-white p-2  rounded-lg"
+                          style={{
+                            display: "flex",
+                            gap: 12,
+                          }}
+                        >
+                          <button
+                            onClick={openChainModal}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              background: "white",
+                            }}
+                            type="button"
+                          >
+                            {chain.hasIcon && (
+                              <div
+                                style={{
+                                  background: chain.iconBackground,
+                                  width: 12,
+                                  height: 12,
+                                  borderRadius: 999,
+                                  overflow: "hidden",
+                                  marginRight: 4,
+                                }}
+                              >
+                                {chain.iconUrl && (
+                                  <img
+                                    alt={chain.name ?? "Chain icon"}
+                                    src={chain.iconUrl}
+                                    style={{ width: 12, height: 12 }}
+                                  />
+                                )}
+                              </div>
+                            )}
+                          </button>
+
+                          <button onClick={openAccountModal} type="button">
+                            {account.displayName}
+                            {account.displayBalance
+                              ? ` (${account.displayBalance})`
+                              : ""}
+                          </button>
+                        </div>
+                      );
+                    })()}
+                  </div>
+                );
+              }}
+            </ConnectButton.Custom>
+            {/* <WalletButton wallet="metamask" />
+            <WalletButton wallet="walletconnect" /> */}
           </div>
           <div className="md:hidden flex items-center">
             <button className="text-white focus:outline-none">

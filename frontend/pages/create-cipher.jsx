@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Head from "../components/Head";
-import axios from "axios";
+
 import { useAccount } from "wagmi";
 import axiosConfig from "../util/axios";
 
@@ -42,8 +42,8 @@ export default function CreateCipher() {
               <input
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="p-3 rounded-lg w-[20%] h-8 text-black"
-                placeholder="Search for a cipher "
+                className="p-3 rounded-lg w-[25%] h-8 text-black mr-1"
+                placeholder="ETHIndia2023 "
               ></input>{" "}
               @cipherInbox.com
             </div>

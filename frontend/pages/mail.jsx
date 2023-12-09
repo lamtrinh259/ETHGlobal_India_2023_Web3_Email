@@ -1,41 +1,73 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Footer from "../components/Footer";
 import Head from "../components/Head";
 
 import SidebarDrawer from "../components/SidebarDrawer";
 import Popup from "reactjs-popup";
+import { useAccount } from "wagmi";
+import axiosConfig from "../util/axios";
+import { useRouter } from "next/router";
 
 export default function Mail() {
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
+  const router = useRouter();
 
   const [image, setImage] = useState(null);
 
   const [file, setFile] = useState();
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    console.log(file);
-    // if (!file) return;
+  const [toEmail, setToEmail] = useState("");
+  const [fromEmail, setFromEmail] = useState("");
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
+  const { address, isConnecting, isDisconnected } = useAccount();
+  // const onSubmit = async (e) => {
+  //   e.preventDefault();
+  //   console.log(file);
+  //   // if (!file) return;
 
-    try {
-      const data = new FormData();
-      data.set("file", file);
+  //   try {
+  //     const data = new FormData();
+  //     data.set("file", file);
 
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: data,
-      });
-      // handle the error
-      if (!res.ok) throw new Error(await res.text());
-    } catch (e) {
-      // Handle errors here
-      console.error(e);
+  //     const res = await fetch("/api/upload", {
+  //       method: "POST",
+  //       body: data,
+  //     });
+  //     // handle the error
+  //     if (!res.ok) throw new Error(await res.text());
+  //   } catch (e) {
+  //     // Handle errors here
+  //     console.error(e);
+  //   }
+  // };
+  useEffect(() => {
+    console.log(address);
+    if (!address) {
+      alert("please connect your wallet first");
+      // router.push("/");
     }
-  };
+  }, []);
+  function sendMail() {
+    axiosConfig
+      .post("email-notification/send-email", {
+        to: toEmail,
+        from: "test@from.com",
+        message: message,
+        subject: subject,
+        attachments: [],
+      })
+      .then(function (response) {
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
 
   return (
     <>
@@ -578,6 +610,7 @@ export default function Mail() {
                         voluptatem
                       </span>
                     </div>
+
                     <div className="w-32 flex items-center justify-end">
                       <div
                         x-show="messageHover"
@@ -686,6 +719,8 @@ export default function Mail() {
                               id="full_name"
                               className="h-10 border mt-1 rounded px-2 w-full bg-gray-50"
                               defaultValue=""
+                              value={toEmail}
+                              onChange={(e) => setToEmail(e.target.value)}
                               placeholder="email@domain.com"
                             />
                           </div>
@@ -695,6 +730,8 @@ export default function Mail() {
                               type="text"
                               name="email"
                               id="email"
+                              value={subject}
+                              onChange={(e) => setSubject(e.target.value)}
                               className="h-10 border mt-1 rounded px-2 w-full bg-gray-50"
                               defaultValue=""
                             />
@@ -707,6 +744,10 @@ export default function Mail() {
                               contentEditable
                               type="text"
                               name="zipcode"
+                              value={message}
+                              onInput={(e) =>
+                                setMessage(e.currentTarget.textContent)
+                              }
                               id="zipcode"
                               className="transition-all  flex items-start justify-start flex-col border  rounded px-2 w-full bg-gray-50 h-52"
                               placeholder=""
@@ -714,18 +755,21 @@ export default function Mail() {
                             />
                           </div>
 
-                          <form onSubmit={onSubmit} method="post">
+                          {/* <form onSubmit={onSubmit} method="post">
                             <input
                               type="file"
                               name="file"
                               onChange={(e) => setFile(e.target.files?.[0])}
                             />
                             <input type="submit" value="Upload" />
-                          </form>
+                          </form> */}
 
                           <div className="md:col-span-5 text-start">
                             <div className="inline-flex items-start">
-                              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                              <button
+                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                onClick={() => sendMail()}
+                              >
                                 Send
                               </button>
                             </div>

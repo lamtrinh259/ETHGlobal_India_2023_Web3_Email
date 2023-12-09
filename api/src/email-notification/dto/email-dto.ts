@@ -17,6 +17,6 @@ export class SendEmailDto {
   @IsNotEmpty()
   subject: string;
 
-  @IsEmpty()
+  @IsNotEmpty()
   attachments?: unknown[];
 }

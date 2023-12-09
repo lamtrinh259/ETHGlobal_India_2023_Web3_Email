@@ -1,8 +1,10 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { EmailNotificationService } from './email-notification.service';
 import { SendEmailDto } from './dto/email-dto';
 import { Result, left, right } from 'src/utils/Result';
 import { GenerateEmailIdDto } from './dto/generate-email-id.dto';
+import { uploadEmailsToFileCoins } from 'src/utils/FileCoinUtils';
+import EthersHelper from 'src/utils/EthersUtils';
 
 @Controller('email-notification')
 export class EmailNotificationController {
@@ -10,10 +12,11 @@ export class EmailNotificationController {
   @Post('send-email')
   async sendEmail(@Body() email: SendEmailDto) {
     try {
-      await this.emailNotificationService.sendEmail(email);
-      return right(Result.ok<string>('yew')).value;
+      const result = await this.emailNotificationService.sendEmail(email);
+      return right(Result.ok(result));
     } catch (error) {
-      return left(error);
+      console.log(error);
+      return left(Result.fail(error));
     }
   }
 
@@ -27,6 +30,17 @@ export class EmailNotificationController {
           passeord: 'test',
         }),
       ).value;
+    } catch (error) {
+      return left(error);
+    }
+  }
+
+  @Get('get-user-email')
+  async getUserEmail(@Param() publicKey: string) {
+    try {
+      const result =
+        await this.emailNotificationService.getUserByWallet(publicKey);
+      return right(Result.ok<Record<string, string>>(result)).value;
     } catch (error) {
       return left(error);
     }

@@ -4,4 +4,7 @@ export class GenerateEmailIdDto {
   @IsNotEmpty()
   @IsEmail()
   email: string;
+
+  @IsNotEmpty()
+  wallet: string;
 }

@@ -23,45 +23,44 @@ export class EmailNotificationService {
   private decoder;
   private ChatMessage;
   constructor() {
-    this.intialization();
+    // this.intialization();
   }
   async sendEmail(email: Email) {
-    const contentTopic = email.to;
+    // const contentTopic = email.to;
 
-    // Create a message encoder and decoder
-    this.encoder = createEncoder({
-      contentTopic: contentTopic, // message content topic
-      ephemeral: true, // allows messages not be stored on the network
-    });
-    this.decoder = createDecoder(contentTopic);
-    this.subscribe();
-    // Create a message structure using Protobuf
-    this.ChatMessage = new protobuf.Type('ChatMessage')
-      .add(new protobuf.Field('timestamp', 1, 'uint64'))
-      .add(new protobuf.Field('sender', 2, 'string'))
-      .add(new protobuf.Field('message', 3, 'string'));
-    // Create a new message object
-    const protoMessage = this.ChatMessage.create({
-      timestamp: Date.now(),
-      sender: 'Alice',
-      message: 'Hello, World!',
-    });
+    // // Create a message encoder and decoder
+    // this.encoder = createEncoder({
+    //   contentTopic: contentTopic, // message content topic
+    //   ephemeral: true, // allows messages not be stored on the network
+    // });
+    // this.decoder = createDecoder(contentTopic);
+    // this.subscribe();
+    // // Create a message structure using Protobuf
+    // this.ChatMessage = new protobuf.Type('ChatMessage')
+    //   .add(new protobuf.Field('timestamp', 1, 'uint64'))
+    //   .add(new protobuf.Field('sender', 2, 'string'))
+    //   .add(new protobuf.Field('message', 3, 'string'));
+    // // Create a new message object
+    // const protoMessage = this.ChatMessage.create({
+    //   timestamp: Date.now(),
+    //   sender: 'Alice',
+    //   message: 'Hello, World!',
+    // });
 
     // Serialise the message using Protobuf
-    const serialisedMessage = this.ChatMessage.encode(protoMessage).finish();
+    // const serialisedMessage = this.ChatMessage.encode(protoMessage).finish();
 
-    // Send the message using Light Push
-    await this.node.lightPush.send(this.encoder, {
-      payload: serialisedMessage,
-    });
+    // // Send the message using Light Push
+    // await this.node.lightPush.send(this.encoder, {
+    //   payload: serialisedMessage,
+    // });
     return true;
   }
 
   async intialization() {
-    this.node = await createLightNode({ defaultBootstrap: true });
-    this.node.start();
-
-    await waitForRemotePeer(this.node, [Protocols.LightPush, Protocols.Filter]);
+    // this.node = await createLightNode({ defaultBootstrap: true });
+    // this.node.start();
+    // await waitForRemotePeer(this.node, [Protocols.LightPush, Protocols.Filter]);
   }
 
   async subscribe() {

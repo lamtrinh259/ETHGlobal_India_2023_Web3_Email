@@ -9,6 +9,46 @@ import Popup from "reactjs-popup";
 export default function Mail() {
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
+
+  const [image, setImage] = useState(null);
+  const [createObjectURL, setCreateObjectURL] = useState(null);
+
+  const uploadToClient = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      const i = event.target.files[0];
+
+      setImage(i);
+      setCreateObjectURL(URL.createObjectURL(i));
+    }
+  };
+
+  const uploadToServer = async (event) => {
+    const body = new FormData();
+    body.append("file", image);
+    const response = await fetch("/api/file", {
+      method: "POST",
+      body,
+    });
+  };
+  async function handleFileUpload(event) {
+    if (!event.target.files || event.target.files.length === 0) {
+      return; // User canceled file selection
+    }
+
+    const files = event.target.files;
+    const formData = new FormData();
+
+    for (const file of Array.from(files)) {
+      formData.append("files", file);
+    }
+
+    formData.append("otherData", "some data");
+
+    await fetch("/api/file", {
+      method: "POST",
+      body: formData,
+    });
+  }
   return (
     <>
       <Head isApp={true} />
@@ -20,7 +60,7 @@ export default function Mail() {
             <div className="h-16 flex items-center">
               <a
                 onClick={() => setOpen((o) => !o)}
-                className="cursor-pointer w-48 mx-auto bg-white  flex items-center justify-center text-black py-2 rounded space-x-2 transition duration-150"
+                className="cursor-pointer mt-5  w-48 mx-auto bg-white  flex items-center justify-center text-black py-2 rounded space-x-2 transition duration-150"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -219,7 +259,7 @@ export default function Mail() {
             <div className="text-white    bg-black">
               <span className="text-2xl ">Inbox</span>
               <ul>
-                <li className="flex items-center border-y hover:bg-gray-900  mt-5 px-2 ">
+                <li className="flex items-center border-y hover:bg-gray-900  px-2 ">
                   <input
                     type="checkbox"
                     className="focus:ring-0 border-1 border-gray-400"
@@ -266,9 +306,281 @@ export default function Mail() {
                           </svg>
                         </button>
                       </div>
-                      <span className="w-56 pr-2 truncate">
-                        William Livingston
+                      <span className="w-56 pr-2 truncate">Hemang </span>
+                      <span className="w-64 truncate">
+                        Lorem ipsum dolor sit amet
                       </span>
+                      <span className="mx-1">-</span>
+                      <span className="w-96 text-gray-600 text-sm truncate">
+                        Sed ut perspiciatis unde omnis iste natus error sit
+                        voluptatem
+                      </span>
+                    </div>
+                    <div className="w-32 flex items-center justify-end">
+                      <div
+                        x-show="messageHover"
+                        className="flex items-center space-x-2"
+                        style={{ display: "none" }}
+                      >
+                        <button title="Archive">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="text-gray-500 hover:text-gray-900 h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M8 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-2m-4-1v8m0 0l3-3m-3 3L9 8m-5 5h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293h3.172a1 1 0 00.707-.293l2.414-2.414a1 1 0 01.707-.293H20"
+                            />
+                          </svg>
+                        </button>
+                        <button title="Delete">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="text-gray-500 hover:text-gray-900 h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
+                          </svg>
+                        </button>
+                        <button title="Mark As Unread">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="text-gray-500 hover:text-gray-900 h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                            />
+                          </svg>
+                        </button>
+                        <button title="Snooze">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="text-gray-500 hover:text-gray-900 h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                      <span
+                        x-show="!messageHover"
+                        className="text-sm text-gray-500"
+                      >
+                        3:05 PM
+                      </span>
+                    </div>
+                  </div>
+                </li>
+                <li className="flex items-center border-y hover:bg-gray-900  px-2 ">
+                  <input
+                    type="checkbox"
+                    className="focus:ring-0 border-1 border-gray-400"
+                    defaultChecked="checkAll"
+                  />
+                  <div
+                    x-data="{ messageHover: false }"
+                    mouseover="messageHover = true"
+                    mouseleave="messageHover = false"
+                    className="w-full flex items-center justify-between p-1 my-1 cursor-pointer"
+                  >
+                    <div className="flex items-center">
+                      <div className="flex items-center mr-4 ml-1 space-x-1">
+                        <button title="Not starred">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="text-gray-500 hover:text-gray-900 h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                            />
+                          </svg>
+                        </button>
+                        <button title="Click to mark this email as important">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="text-gray-500 hover:text-gray-900 h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                      <span className="w-56 pr-2 truncate">Lam</span>
+                      <span className="w-64 truncate">
+                        Lorem ipsum dolor sit amet
+                      </span>
+                      <span className="mx-1">-</span>
+                      <span className="w-96 text-gray-600 text-sm truncate">
+                        Sed ut perspiciatis unde omnis iste natus error sit
+                        voluptatem
+                      </span>
+                    </div>
+                    <div className="w-32 flex items-center justify-end">
+                      <div
+                        x-show="messageHover"
+                        className="flex items-center space-x-2"
+                        style={{ display: "none" }}
+                      >
+                        <button title="Archive">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="text-gray-500 hover:text-gray-900 h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M8 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-2m-4-1v8m0 0l3-3m-3 3L9 8m-5 5h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293h3.172a1 1 0 00.707-.293l2.414-2.414a1 1 0 01.707-.293H20"
+                            />
+                          </svg>
+                        </button>
+                        <button title="Delete">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="text-gray-500 hover:text-gray-900 h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
+                          </svg>
+                        </button>
+                        <button title="Mark As Unread">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="text-gray-500 hover:text-gray-900 h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                            />
+                          </svg>
+                        </button>
+                        <button title="Snooze">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="text-gray-500 hover:text-gray-900 h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                      <span
+                        x-show="!messageHover"
+                        className="text-sm text-gray-500"
+                      >
+                        3:05 PM
+                      </span>
+                    </div>
+                  </div>
+                </li>
+                <li className="flex items-center border-y hover:bg-gray-900  px-2 ">
+                  <input
+                    type="checkbox"
+                    className="focus:ring-0 border-1 border-gray-400"
+                    defaultChecked="checkAll"
+                  />
+                  <div
+                    x-data="{ messageHover: false }"
+                    mouseover="messageHover = true"
+                    mouseleave="messageHover = false"
+                    className="w-full flex items-center justify-between p-1 my-1 cursor-pointer"
+                  >
+                    <div className="flex items-center">
+                      <div className="flex items-center mr-4 ml-1 space-x-1">
+                        <button title="Not starred">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="text-gray-500 hover:text-gray-900 h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                            />
+                          </svg>
+                        </button>
+                        <button title="Click to mark this email as important">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="text-gray-500 hover:text-gray-900 h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                      <span className="w-56 pr-2 truncate">Sudarshan</span>
                       <span className="w-64 truncate">
                         Lorem ipsum dolor sit amet
                       </span>
@@ -413,6 +725,14 @@ export default function Mail() {
                               defaultValue=""
                             />
                           </div>
+
+                          {/* <button
+                            className="btn btn-primary"
+                            type="submit"
+                            onClick={uploadToServer}
+                          >
+                            Send to server
+                          </button> */}
 
                           <div className="md:col-span-5 text-start">
                             <div className="inline-flex items-start">

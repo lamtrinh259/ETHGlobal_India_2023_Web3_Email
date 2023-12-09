@@ -1,6 +1,28 @@
+import { useState } from "react";
 import Head from "../components/Head";
+import axios from "axios";
+import { useAccount } from "wagmi";
+import axiosConfig from "../util/axios";
 
 export default function CreateCipher() {
+  const { address, isConnecting, isDisconnected } = useAccount();
+  const [email, setEmail] = useState("");
+
+  function createEmail() {
+    console.log(address);
+    axiosConfig
+      .post("email-notification/generate-email-id", {
+        email: "email@t.com",
+        walletAddress: address,
+      })
+      .then(function (response) {
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
   return (
     <div>
       <Head />
@@ -16,12 +38,23 @@ export default function CreateCipher() {
               and your decentralised website.
             </p>
 
-            <div className="mt-8 flex justify-center ">
+            <div className="mt-8 flex justify-center flex-row ">
               <input
-                className="p-4 rounded-lg w-[50%] h-10 "
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="p-3 rounded-lg w-[20%] h-8 text-black"
                 placeholder="Search for a cipher "
-              ></input>
+              ></input>{" "}
+              @cipherInbox.com
             </div>
+            {email && (
+              <button
+                className="bg-white p-2 rounded-lg text-black mt-5"
+                onClick={() => createEmail()}
+              >
+                Mint Now
+              </button>
+            )}
           </div>
         </div>
       </section>

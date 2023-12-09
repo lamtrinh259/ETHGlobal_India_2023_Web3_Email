@@ -1,11 +1,18 @@
 import { ConnectButton, WalletButton } from "@rainbow-me/rainbowkit";
 import Link from "next/link";
 
-import { useConnect } from "wagmi";
+import { useAccount, useConnect } from "wagmi";
+import { useRouter } from "next/router";
 
 export default function Head({ isApp }) {
-  const { connect, connectors, error, isLoading, pendingConnector } =
-    useConnect();
+  const router = useRouter();
+
+  const account = useAccount({
+    onConnect({ address, connector, isReconnected }) {
+      // console.log("Connected", { address, connector, isReconnected });
+      router.push("/create-cipher");
+    },
+  });
   function fun(openConnectModal) {
     openConnectModal();
     // setTimeout(() => {

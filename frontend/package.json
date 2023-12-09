@@ -11,6 +11,7 @@
     "@thirdweb-dev/auth": "^4.1.14",
     "@thirdweb-dev/sdk": "^4.0.19",
     "@xmtp/react-sdk": "^3.0.0",
+    "axios": "^1.6.2",
     "ethers": "^5.7.2",
     "formidable": "^3.5.1",
     "next": "latest",

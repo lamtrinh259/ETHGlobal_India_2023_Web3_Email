@@ -33,6 +33,23 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { oktoWallet } from "@rainbow-me/rainbowkit/wallets";
 import { InjectedConnector } from "@wagmi/core";
+import axios from "axios";
+axios.defaults.baseURL = process.env.REACT_PUBLIC_API_URL;
+
+axios.interceptors.request.use(
+  (config) => {
+    if (!config.headers.Authorization) {
+      const token = JSON.parse(localStorage.getItem("keyCloak")).token;
+
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    }
+
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [

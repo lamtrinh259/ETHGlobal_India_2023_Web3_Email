@@ -10,7 +10,7 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  await app.listen(3000);
-  logger.log('Application Started at http://localhost:3000');
+  await app.listen(8000);
+  logger.log('Application Started at http://localhost:8000');
 }
 bootstrap();

@@ -1,14 +1,11 @@
-import Head from "next/head";
+import Head from "../components/Head";
 
 export default function CreateCipher() {
   return (
     <div>
-      <Head>
-        <title>About</title>
-      </Head>
-
+      <Head />
       <section className=" text-white overflow-hidden">
-        <div className="mx-auto max-w-screen-xl px-4 py-32 lg:flex lg:h-screen lg:items-center">
+        <div className="mx-auto max-w-screen-xl px-4 py-32 pt-20 lg:flex lg:h-screen lg:items-center">
           <div className="mx-auto text-center font-primary">
             <h1 className="bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 bg-clip-text text-3xl  text-transparent sm:text-5xl">
               Your cipher domain

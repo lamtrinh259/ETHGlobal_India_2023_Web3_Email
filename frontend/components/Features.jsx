@@ -5,7 +5,7 @@ export default function Features() {
         <div className="container px-6 py-10 mx-auto">
           <h1 className="text-3xl font-semibold text-gray-800 capitalize lg:text-4xl dark:text-white">
             explore our <br /> awesome{" "}
-            <span className="underline decoration-blue-500">Features</span>
+            <span className="underline decoration-[#7b3fe4]">Features</span>
           </h1>
           <p className="mt-4 text-gray-500 xl:mt-6 dark:text-gray-300">
             Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nostrum

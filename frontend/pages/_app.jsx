@@ -2,6 +2,7 @@
 
 import "../styles/globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
+import { XMTPProvider } from "@xmtp/react-sdk";
 
 import {
   RainbowKitProvider,
@@ -115,22 +116,24 @@ function MyApp({ Component, pageProps }) {
   const { locale } = useRouter();
 
   return (
-    <WagmiConfig config={wagmiConfig}>
-      <RainbowKitProvider
-        appInfo={demoAppInfo}
-        chains={chains}
-        locale={locale}
-        theme={darkTheme({
-          accentColor: "#7b3fe4",
-          accentColorForeground: "white",
-          borderRadius: "small",
-          fontStack: "system",
-          overlayBlur: "small",
-        })}
-      >
-        <Component {...pageProps} />
-      </RainbowKitProvider>
-    </WagmiConfig>
+    <XMTPProvider>
+      <WagmiConfig config={wagmiConfig}>
+        <RainbowKitProvider
+          appInfo={demoAppInfo}
+          chains={chains}
+          locale={locale}
+          theme={darkTheme({
+            accentColor: "#7b3fe4",
+            accentColorForeground: "white",
+            borderRadius: "small",
+            fontStack: "system",
+            overlayBlur: "small",
+          })}
+        >
+          <Component {...pageProps} />
+        </RainbowKitProvider>
+      </WagmiConfig>
+    </XMTPProvider>
   );
 }
 

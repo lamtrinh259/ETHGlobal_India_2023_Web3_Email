@@ -4,20 +4,33 @@ import Link from "next/link";
 import { useAccount, useConnect } from "wagmi";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export default function Head({ isApp }) {
+  const [wallet, setWallet] = useState({});
+  const [add, setAdd] = useState({});
+  const [userToken, setUserToken] = useState({});
   const router = useRouter();
+
+  const isHomePage = router.pathname === "/";
 
   const account = useAccount({
     onConnect({ address, connector, isReconnected }) {
       // console.log("Connected", { address, connector, isReconnected });
+      sessionStorage.setItem("address", address);
+      sessionStorage.setItem("type", "rb");
       router.push("/create-cipher");
     },
   });
-
+  useEffect(() => {
+    let address = sessionStorage.getItem("address");
+    if (address) {
+      setAdd(address);
+    }
+  }, []);
   async function authenticate(api_key, idToken, pin) {
     let { data } = await axios.post(
-      `/api/v1/authenticate`,
+      `https://3p-bff.oktostage.com/api/v1/authenticate`,
       {
         id_token: idToken,
       },
@@ -28,41 +41,70 @@ export default function Head({ isApp }) {
       }
     );
 
-    const token = data.token;
     // user signup flow
-    if (token) {
-      const { data } = await axios.post(
-        `/api/v1/set_pin`,
-        {
-          id_token: idToken,
-          token: token,
-          relogin_pin: pin,
-          purpose: "set_pin",
+    const { auth_token, refresh_auth_token, device_token } = data.data;
+    setUserToken(data.data);
+    return { auth_token, refresh_auth_token, device_token };
+  }
+  // 3. Call `/api/v1/wallet` endpoint to create wallet
+  async function create_wallet(api_key, auth) {
+    const { data } = await axios.post(
+      `https://3p-bff.oktostage.com/api/v1/wallet`,
+      {},
+      {
+        headers: {
+          "x-api-key": api_key,
+          authorization: `Bearer ${auth}`,
         },
-        {
-          headers: {
-            "x-api-key": apiKey,
-          },
-        }
-      );
-      const { auth_token, refresh_auth_token, device_token } = data;
-      return { auth_token, refresh_auth_token, device_token };
-    }
-    // user login flow
-    else {
-      const { auth_token, refresh_auth_token, device_token } = data;
-      return { auth_token, refresh_auth_token, device_token };
-    }
-  }
-  function createOktoWallet() {
-    authenticate(
-      "474abe92-fdc1-489c-be47-764d850c4253",
-      "eyJhbGciOiJSUzI1NiIsImtpZCI6ImU0YWRmYjQzNmI5ZTE5N2UyZTExMDZhZjJjODQyMjg0ZTQ5ODZhZmYiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI0MDc0MDg3MTgxOTIuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI0MDc0MDg3MTgxOTIuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMDMxMzg2NzQ1ODYxNzI3MzQ0MjMiLCJlbWFpbCI6ImhlbWFuZ3ZvcmEyQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoiV0wxRVBURkd2YklFNkdfR1NnZVNFdyIsImlhdCI6MTcwMjE0MTY1MCwiZXhwIjoxNzAyMTQ1MjUwfQ.Op3VOlQtKzngh72zf8XnZcs8d64fw6krjFaFWHkxM6nIaiwzA4qwfOFTuHzm2GB5Vkwx4eG1h59KOIAx5t_LX_e2N_HH2UkiKNid3_PfzV-0O4kiJ396590EluOgnF4k9VVM3EuCiA08kFzmqnXG-Qi41-VYTtmH2fJT7GsnEKta23aEeam_CYNkxB2_8iGaDU1NLbF_Eqgsa2FLsYmsiPs6QzHGNhWXwJ5LW2xri13MkAwpfZDk6SPqE-60ZKQYQkDonkg7cOkMvqyegimwSt83GF0fAwm1hMI2QEaFmtu3m8GNXuaSCNaRKuKJb-EoV3r13yp_4iA45yhRjjbG4g",
-      "1234"
+      }
     );
+    const { wallets } = data.data;
+    if (wallets?.success) alert("Wallet created successfully !!!");
+    setWallet(wallets);
+    return wallets;
   }
+  async function createOktoWallet() {
+    let res = await authenticate(
+      "474abe92-fdc1-489c-be47-764d850c4253",
+      "eyJhbGciOiJSUzI1NiIsImtpZCI6ImU0YWRmYjQzNmI5ZTE5N2UyZTExMDZhZjJjODQyMjg0ZTQ5ODZhZmYiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI0MDc0MDg3MTgxOTIuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI0MDc0MDg3MTgxOTIuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMDMxMzg2NzQ1ODYxNzI3MzQ0MjMiLCJlbWFpbCI6ImhlbWFuZ3ZvcmEyQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoidDJWX1ZVdWZ3UzZvM1RwYUk2dFNMdyIsImlhdCI6MTcwMjE2MDQ5NiwiZXhwIjoxNzAyMTY0MDk2fQ.RMwhCVlFCu7D3MEmgyRuFn6IJT7P-6WH8P3_RD3japVVAWLqtc_FsZn9euUj9XkZn0vJVG9R-l9_tGQsLqmOrhIvviw7xmzscUs3VGgtfoboQn6VVep6LatsfCRw45TkNzP31zS0HN2dcMzI97dcMFJogZyc_iQXCOVx47wyk7tSg57HWhKSdaEGexPm0lxP0m61xYPzqDE78MPycRYwBwktT2Um335DRWW9ud-ag2PVOJ_-Vlmnz43SgGSqRgek50EVyp1MyggXzAGsIsWIsiv8_ELGqTDgSRo1RhUVbri7uyYIhnebk0piv0uBvymHCqhDq1f2USEH5Fys-Ry-dQ",
+      "123456"
+    );
+    console.log(res);
+    let walletres = await create_wallet(
+      "eyJhbGciOiJSUzI1NiIsImtpZCI6ImU0YWRmYjQzNmI5ZTE5N2UyZTExMDZhZjJjODQyMjg0ZTQ5ODZhZmYiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI0MDc0MDg3MTgxOTIuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI0MDc0MDg3MTgxOTIuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMDMxMzg2NzQ1ODYxNzI3MzQ0MjMiLCJlbWFpbCI6ImhlbWFuZ3ZvcmEyQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoidDJWX1ZVdWZ3UzZvM1RwYUk2dFNMdyIsImlhdCI6MTcwMjE2MDQ5NiwiZXhwIjoxNzAyMTY0MDk2fQ.RMwhCVlFCu7D3MEmgyRuFn6IJT7P-6WH8P3_RD3japVVAWLqtc_FsZn9euUj9XkZn0vJVG9R-l9_tGQsLqmOrhIvviw7xmzscUs3VGgtfoboQn6VVep6LatsfCRw45TkNzP31zS0HN2dcMzI97dcMFJogZyc_iQXCOVx47wyk7tSg57HWhKSdaEGexPm0lxP0m61xYPzqDE78MPycRYwBwktT2Um335DRWW9ud-ag2PVOJ_-Vlmnz43SgGSqRgek50EVyp1MyggXzAGsIsWIsiv8_ELGqTDgSRo1RhUVbri7uyYIhnebk0piv0uBvymHCqhDq1f2USEH5Fys-Ry-dQ",
+      res.auth_token
+    );
+    console.log(walletres);
+    if (isHomePage) {
+      sessionStorage.setItem("address", walletres[0].address);
+      sessionStorage.setItem("auth_token", res.auth_token);
+      sessionStorage.setItem("api", "474abe92-fdc1-489c-be47-764d850c4253");
+      sessionStorage.setItem("type", "okto");
+      router.push({
+        pathname: "/create-cipher",
+      });
+    }
+    setWallet(walletres[0]);
+  }
+  async function logout() {
+    const { data } = await axios.post(
+      `https://3p-bff.oktostage.com/api/v1/logout`,
+      {},
+      {
+        headers: {
+          "x-api-key": "474abe92-fdc1-489c-be47-764d850c4253",
+          authorization: `Bearer ${userToken.auth_token}`,
+        },
+      }
+    );
+    setWallet("");
+    console.log("logout", data);
+    return data;
+  }
+
   function fun(openConnectModal) {
     openConnectModal();
+
     // setTimeout(() => {
     //   document.getElementsByClassName(
     //     "iekbcc0 ju367v4y ju367v37 ju367v3s ju367v4d ju367va ju367v15"
@@ -86,7 +128,7 @@ export default function Head({ isApp }) {
           >
             <img src="./logo2.png" className="h-20 w-20"></img>CipherInbox
           </Link>
-          <div className="hidden md:flex items-center justify-between w-[25vw] ">
+          <div className="hidden md:flex items-center justify-between w-[32vw] ">
             <Link
               href="/#"
               className="text-gray-400 hover:text-gray-200 text-lg"
@@ -132,88 +174,105 @@ export default function Head({ isApp }) {
                       },
                     })}
                   >
-                    {(() => {
-                      if (!connected) {
-                        return (
-                          <div className="flex flex-row">
+                    {!wallet.address &&
+                      (() => {
+                        if (!connected) {
+                          return (
+                            <div className="flex flex-row">
+                              <button
+                                onClick={() => fun(openConnectModal)}
+                                type="button"
+                                className="bg-white  rounded-lg"
+                              >
+                                Connect Wallet
+                              </button>
+                              <button
+                                onClick={() => createOktoWallet()}
+                                type="button"
+                                className="bg-white p-2 rounded-lg ml-5"
+                              >
+                                login / Sign up with Okto
+                              </button>
+                            </div>
+                          );
+                        }
+
+                        if (chain.unsupported) {
+                          return (
                             <button
-                              onClick={() => fun(openConnectModal)}
+                              onClick={openChainModal}
                               type="button"
                               className="bg-white p-2 rounded-lg"
                             >
-                              Connect Wallet
+                              Wrong network
                             </button>
-                            {/* <button
-                              onClick={() => createOktoWallet()}
-                              type="button"
-                              className="bg-white p-2 rounded-lg ml-5"
-                            >
-                              Sign up with Okto
-                            </button> */}
-                          </div>
-                        );
-                      }
+                          );
+                        }
 
-                      if (chain.unsupported) {
                         return (
-                          <button
-                            onClick={openChainModal}
-                            type="button"
-                            className="bg-white p-2 rounded-lg"
-                          >
-                            Wrong network
-                          </button>
-                        );
-                      }
-
-                      return (
-                        <div
-                          className="bg-white p-2  rounded-lg"
-                          style={{
-                            display: "flex",
-                            gap: 12,
-                          }}
-                        >
-                          <button
-                            onClick={openChainModal}
+                          <div
+                            className="bg-white p-2  rounded-lg"
                             style={{
                               display: "flex",
-                              alignItems: "center",
-                              background: "white",
+                              gap: 12,
                             }}
-                            type="button"
                           >
-                            {chain.hasIcon && (
-                              <div
-                                style={{
-                                  background: chain.iconBackground,
-                                  width: 12,
-                                  height: 12,
-                                  borderRadius: 999,
-                                  overflow: "hidden",
-                                  marginRight: 4,
-                                }}
-                              >
-                                {chain.iconUrl && (
-                                  <img
-                                    alt={chain.name ?? "Chain icon"}
-                                    src={chain.iconUrl}
-                                    style={{ width: 12, height: 12 }}
-                                  />
-                                )}
-                              </div>
-                            )}
-                          </button>
+                            <button
+                              onClick={openChainModal}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                background: "white",
+                              }}
+                              type="button"
+                            >
+                              {chain.hasIcon && (
+                                <div
+                                  style={{
+                                    background: chain.iconBackground,
+                                    width: 12,
+                                    height: 12,
+                                    borderRadius: 999,
+                                    overflow: "hidden",
+                                    marginRight: 4,
+                                  }}
+                                >
+                                  {chain.iconUrl && (
+                                    <img
+                                      alt={chain.name ?? "Chain icon"}
+                                      src={chain.iconUrl}
+                                      style={{ width: 12, height: 12 }}
+                                    />
+                                  )}
+                                </div>
+                              )}
+                            </button>
 
-                          <button onClick={openAccountModal} type="button">
-                            {account.displayName}
-                            {account.displayBalance
-                              ? ` (${account.displayBalance})`
-                              : ""}
-                          </button>
+                            <button onClick={openAccountModal} type="button">
+                              {account.displayName}
+                              {account.displayBalance
+                                ? ` (${account.displayBalance})`
+                                : ""}
+                            </button>
+                          </div>
+                        );
+                      })()}
+                    {wallet.address && (
+                      <div className="flex flex-row justify-center items-center mr-7">
+                        <div className="text-white">
+                          {" "}
+                          {wallet.address?.substring(0, 4) +
+                            "...." +
+                            wallet?.address?.slice(-2)}
                         </div>
-                      );
-                    })()}
+                        <button
+                          className="bg-white p-2 rounded"
+                          onClick={() => logout()}
+                        >
+                          Logout
+                        </button>
+                      </div>
+                    )}
                   </div>
                 );
               }}

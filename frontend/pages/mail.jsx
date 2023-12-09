@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 export default function Mail() {
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
+
   const router = useRouter();
 
   const [image, setImage] = useState(null);

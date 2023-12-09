@@ -1,13 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Head from "../components/Head";
 
 import { useAccount } from "wagmi";
 import axiosConfig from "../util/axios";
+import { useRouter } from "next/router";
 
 export default function CreateCipher() {
   const { address, isConnecting, isDisconnected } = useAccount();
   const [email, setEmail] = useState("");
-
+  const [wallet, setWallet] = useState({});
+  const router = useRouter();
+  useEffect(() => {
+    let wall = {};
+    let add = sessionStorage.getItem("address");
+    wall.address = add;
+    if (add) {
+      wall.auth_token = sessionStorage.getItem("auth_token");
+      wall.api = sessionStorage.getItem("api");
+      wall.type = sessionStorage.getItem("type");
+      setWallet(wall);
+      console.log(wall);
+    }
+  }, []);
   function createEmail() {
     console.log(address);
     axiosConfig

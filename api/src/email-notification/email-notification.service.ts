@@ -45,6 +45,9 @@ export class EmailNotificationService {
     // await this.ethersUtil.triggerNewEmailEvent(email.to, cid);
     // to fetch from and to wllet detaild from DB
   }
+  async sendtoweb(email) {
+    return await this.sendGridService.send(email);
+  }
   async generateEmailId(domain, key) {
     const createdCat = new this.userModel({
       email: `${domain}@cipher-inbox.com`,

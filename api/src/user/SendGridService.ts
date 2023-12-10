@@ -15,7 +15,7 @@ export class SendGridService {
         to: email.to, // Change to your recipient
         from: email.from, // Change to your verified sender
         subject: email.subject, // Change to your
-        text: 'and easy to do anywhere, even with Node.js',
+        text: 'ETH',
         html: email.message,
       };
       await sgMail.send(msg);

@@ -28,14 +28,16 @@ export const uploadAttachmentsToFileCoin = async (buffer, to) => {
     const publicKey = process.env.FILECOIN_PUBLIC_KEY;
     const privateKey = process.env.FILECOIN_PRIVATE_KEY;
     const signedMessage = await signAuthMessage(privateKey);
+    if (to) {
+      const shareResponse = await lighthouse.shareFile(
+        publicKey,
+        [to],
+        cid,
+        signedMessage,
+      );
+      console.log(shareResponse);
+    }
 
-    const shareResponse = await lighthouse.shareFile(
-      publicKey,
-      [to],
-      cid,
-      signedMessage,
-    );
-    console.log(shareResponse);
     // ShareFile: Lighthouse function to securely share your file
     return `https://files.lighthouse.storage/viewFile/${cid}`;
   } catch (error) {
@@ -43,26 +45,25 @@ export const uploadAttachmentsToFileCoin = async (buffer, to) => {
   }
 };
 
-export const uploadEmailsToFileCoins = async (data, to, from) => {
+export const uploadEmailsToFileCoins = async (data) => {
   const token = jwt.sign(data, process.env.JWT_KEY);
   const uploadResponse = await lighthouse.uploadText(
     token,
     process.env.FILECOIN_API_KEY,
   );
   const cid = uploadResponse.data.Hash;
-  console.log(cid, 'upload');
-  if (to && from) {
-    const publicKey = process.env.FILECOIN_PUBLIC_KEY;
-    const privateKey = process.env.FILECOIN_PRIVATE_KEY;
-    const signedMessage = await signAuthMessage(privateKey);
-    const shareResponse = await lighthouse.shareFile(
-      publicKey,
-      [to, from],
-      cid,
-      signedMessage,
-    );
-    console.log(shareResponse);
-  }
+  // if (to && from) {
+  //   const publicKey = process.env.FILECOIN_PUBLIC_KEY;
+  //   const privateKey = process.env.FILECOIN_PRIVATE_KEY;
+  //   const signedMessage = await signAuthMessage(privateKey);
+  //   const shareResponse = await lighthouse.shareFile(
+  //     publicKey,
+  //     [to, from],
+  //     cid,
+  //     signedMessage,
+  //   );
+  //   console.log(shareResponse);
+  // }
 
   // ShareFile: Lighthouse function to securely share your file
   return {

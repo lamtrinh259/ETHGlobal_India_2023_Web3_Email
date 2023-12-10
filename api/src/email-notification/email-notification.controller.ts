@@ -20,6 +20,16 @@ export class EmailNotificationController {
     }
   }
 
+  @Post('send-email-to-l2')
+  async sendtoweb(@Body() email: SendEmailDto) {
+    try {
+      const result = await this.emailNotificationService.sendtoweb(email);
+      return right(result);
+    } catch (error) {
+      console.log(error);
+      return left(error);
+    }
+  }
   @Post('generate-email-id')
   async generateEmail(@Body() body: GenerateEmailIdDto) {
     try {

@@ -71,9 +71,7 @@ export class EmailNotificationService {
       .select('email, publickey')
       .exec();
   }
-  async getMailsByUserEmailOrWallet(email: string) {
-    //get all CID from BC
-    const cid = 'QmUbtv8pbdShGSgcQd4g6CiDGXz9aMiZVCuVdNBTh9c9Vk';
+  async getMailsByUserEmailOrWallet(cid: string) {
     const token = await this.httpService.get(
       `https://gateway.lighthouse.storage/ipfs/${cid}`,
     );

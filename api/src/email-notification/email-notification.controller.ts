@@ -35,11 +35,21 @@ export class EmailNotificationController {
     }
   }
 
-  @Get('get-user-email/:publicKey')
-  async getUserEmail(@Param() publicKey: string) {
+  @Get('get-user-email/:key')
+  async getUserEmail(@Param() key: string) {
+    try {
+      const result = await this.emailNotificationService.getUserByWallet(key);
+      return right(Result.ok(result)).value;
+    } catch (error) {
+      return left(error);
+    }
+  }
+
+  @Get('get-message/:cid')
+  async getDataForm(@Param() cid: string) {
     try {
       const result =
-        await this.emailNotificationService.getUserByWallet(publicKey);
+        await this.emailNotificationService.getMailsByUserEmailOrWallet(cid);
       return right(Result.ok(result)).value;
     } catch (error) {
       return left(error);

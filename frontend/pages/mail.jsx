@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import Footer from "../components/Footer";
 import Head from "../components/Head";
-
+import { ethers } from "ethers";
 import SidebarDrawer from "../components/SidebarDrawer";
 import Popup from "reactjs-popup";
 import { useAccount } from "wagmi";
@@ -12,7 +12,7 @@ import axiosConfig from "../util/axios";
 import { useRouter } from "next/router";
 
 import axios from "axios";
-import { ApolloClient, InMemoryCache, gql } from "apollo-client";
+import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
 import { Signer } from "ethers";
 export default function Mail() {
   const [mailData, setmailData] = useState([]);

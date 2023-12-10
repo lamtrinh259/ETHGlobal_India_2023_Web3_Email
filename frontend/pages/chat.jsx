@@ -86,9 +86,15 @@ export default function Chatv() {
   };
 
   const onSendMessage = async (value) => {
-    return conversation.send(value);
+    return convRef.current.send(value);
   };
-
+  const handleInputChange = (event) => {
+    if (event.key === "Enter") {
+      handleSend();
+    } else {
+      setInputValue(event.target.value);
+    }
+  };
   const MessageList = ({ messages }) => {
     messages = messages.filter(
       (v, i, a) => a.findIndex((t) => t.id === v.id) === i
@@ -194,6 +200,9 @@ export default function Chatv() {
                     <input
                       className="w-full bg-white py-5 px-3 rounded-xl text-gray-500"
                       type="text"
+                      value={inputValue}
+                      onKeyUp={handleInputChange}
+                      onChange={handleInputChange}
                       placeholder="type your message here..."
                     />
                     <button

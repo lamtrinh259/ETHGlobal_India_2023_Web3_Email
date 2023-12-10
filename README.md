@@ -10,26 +10,36 @@ CipherInbox: CipherInbox, with its emphasis on Web3 technology and privacy-focus
 ## Problem & opportunity
 Web2 emails are not focused on privacy at all. There's a saying in the tech world: if you are not paying for the product, then you are the product. Users are basically exchanging their privacy and data in order to use the email service. This presents a good opportunity for users who care about their personal privacy.
 
-Comes CipherInbox, our solution to help users create their own Web3 privacy-centric emails. Some of the traditional
-
-
+Some of the problems with current Web2 emails:
+- Privacy concerns
+- Centralized storage risks
+- Too many spams
 
 ## Solution
+CipherInbox, with its emphasis on Web3 technology and privacy-focused features, is well-equipped to address several common challenges associated with traditional email services.
 
+Key Features:
 
-### Technology architecture and customer flow
+End-to-End Encryption: Your messages are shielded with cutting-edge encryption, ensuring that only the intended recipient can unlock and read them.
 
+Web3 Integration: Harness the potential of blockchain technology by linking your wallet directly to your email, making your communications more secure than ever.
 
-## User Flow (for buyer and seller)
-We aim to create the best consumer decentralized app to help onboard SME's into Web3 seamlessly. The customer journey for seller (shop owner) will be like this:
+Decentralized Security: With our decentralized architecture, your data is distributed across the blockchain, eliminating single points of failure and enhancing the robustness of your digital communications.
 
+User-Friendly Interface: CipherInbox is designed for simplicity without compromising security. Experience seamless navigation and a user-friendly interface that prioritizes your privacy.
 
-For buyers who have already bought an item from a specific shop, then seller can create an NFT gated group chat where each participant in the chat must own an NFT from the seller's (shop's) collection. We use Push Protocol's Conditional Gating of group to carry this out.
+Private Keys, Your Control: Your private keys remain in your hands, giving you complete control over your digital identity and ensuring the utmost confidentiality in your conversations.
+
+### Technology architecture
+![Technology architecture](frontend/public/Technology_architecture.jpeg)
+
+## User Flow:
+Sign up for an email --> choose the desired username --> send an email or chat with their friends --> explore the world of Web3 email
 
 ## Future Work
 Some thoughts for how the whole project can be built out further:
-- Integrate an
--
+- Integrate and build out other features, including video chat
+- Use 1 main blockchain to handle the storage of data
 
 ## Deployed contract (all verified)
 ### Polygon zkEVM testnet (chainID: 1442)
@@ -75,13 +85,6 @@ The verified smart contract for Mantle testnet is:
 https://explorer.testnet.mantle.xyz/address/0x485247D991959C04A2D80a625647adD3Ce45CE6C
 https://explorer.testnet.mantle.xyz/address/0xB86818089aa2B513BE3f639A77E78d379f241a55/contracts#address-tabs
 
-### Linea testnet (chainID: 59140)
-
-| Contract    |                           Contract address |
-| :---------- | -----------------------------------------: |
-|    | 0x485247D991959C04A2D80a625647adD3Ce45CE6C |
-The verified smart contract for Linea testnet is:
-
 
 ## Others
 
@@ -89,7 +92,7 @@ The verified smart contract for Linea testnet is:
 
 
 ### Demo site
-
+https://eth-global-india-2023-web3-email.vercel.app/
 
 ### How to run locally
 1. Go to the dapp (frontend) folder

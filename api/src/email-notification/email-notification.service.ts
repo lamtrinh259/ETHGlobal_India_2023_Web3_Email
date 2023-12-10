@@ -21,14 +21,11 @@ export interface Email {
 
 @Injectable()
 export class EmailNotificationService {
-  private ethersUtil: EthersHelper;
   constructor(
     private readonly httpService: HttpService,
     private readonly sendGridService: SendGridService,
     @InjectModel(User.name) private userModel: Model<User>,
-  ) {
-    this.ethersUtil = new EthersHelper();
-  }
+  ) {}
   async sendEmail(email: Email) {
     if (email.attachments?.length) {
       for (let id = 0; id < email.attachments.length; id++) {
@@ -37,18 +34,14 @@ export class EmailNotificationService {
       }
     }
 
-    const cid = 21313; //await uploadEmailsToFileCoins(
-    //   { message: email.message, subject: email.subject },
-    //   email.to,
-    //   email.from,
-    // );
+    return await uploadEmailsToFileCoins(JSON.stringify(email));
+
     // //web3 mail sending
-    if (email.to.split('@').includes('cipher-inbox.com')) {
-      await xmtpUtil(email);
-    } else {
-      await this.sendGridService.send(email);
-    }
-    console.log('bc');
+    // if (email.to.split('@').includes('cipher-inbox.com')) {
+    // } else {
+    //   await this.sendGridService.send(email);
+    // }
+    // console.log('bc');
     // await this.ethersUtil.triggerNewEmailEvent(email.to, cid);
     // to fetch from and to wllet detaild from DB
   }
@@ -64,11 +57,16 @@ export class EmailNotificationService {
     };
   }
 
-  getUserByWallet(id) {
+  async getUserByWallet(id) {
     //generate email id and push to blockchain
-    return this.userModel
-      .find({ publickey: id })
-      .select('email, publickey')
+    return await this.userModel
+      .findOne(
+        { publickey: id },
+        {
+          email: 1,
+          publickey: 1,
+        },
+      )
       .exec();
   }
   async getMailsByUserEmailOrWallet(cid: string) {

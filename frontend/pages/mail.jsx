@@ -49,7 +49,7 @@ export default function Mail() {
   useEffect(() => {
     console.log(address);
     if (!address) {
-      alert("please connect your wallet first");
+      // alert("please connect your wallet first");
       // router.push("/");
     }
   }, []);

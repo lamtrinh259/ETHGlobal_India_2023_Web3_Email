@@ -9,6 +9,7 @@ export default function CreateCipher() {
   const { address, isConnecting, isDisconnected } = useAccount();
   const [email, setEmail] = useState("");
   const [wallet, setWallet] = useState({});
+  const [errors, setErrors] = useState("");
   const router = useRouter();
   useEffect(() => {
     let wall = {};
@@ -31,6 +32,7 @@ export default function CreateCipher() {
       })
       .then(function (response) {
         console.log(response.data);
+        router.push("/mail");
       })
       .catch(function (error) {
         console.log(error);
@@ -61,6 +63,7 @@ export default function CreateCipher() {
               ></input>{" "}
               @cipherInbox.com
             </div>
+            {errors && <div className="text-red-500 text-xl">{errors}</div>}
             {email && (
               <button
                 className="bg-white p-2 rounded-lg text-black mt-5"

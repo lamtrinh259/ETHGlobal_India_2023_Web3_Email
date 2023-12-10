@@ -31,7 +31,7 @@ function Chat({ client, messageHistory, conversation }) {
               {message.senderAddress === client.address ? "You" : "Bot"}:{" "}
             </strong>
             <span>{message.content}</span>
-            <span className="absolute right-2 bg-slate-200 text-black rounded-full px-2">
+            <span className="absolute right-2 bg-gray-400 text-black rounded-full px-2">
               {" "}
               {message.sent.toLocaleTimeString()}
             </span>
@@ -50,7 +50,7 @@ function Chat({ client, messageHistory, conversation }) {
   };
 
   return (
-    <section className="w-1/2 h-5/6 flex flex-col justify-between bg-white mt-4 rounded-lg">
+    <section className="w-1/2 h-5/6 flex flex-col justify-between bg-gray-00 text- mt-4 rounded-lg">
       <section className="flex-1 flex-col-reverse items-start overflow-y-auto p-2">
         <MessageList messages={messageHistory} />
       </section>

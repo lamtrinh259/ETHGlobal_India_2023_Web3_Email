@@ -17,9 +17,11 @@ export default function Head({ isApp }) {
   const account = useAccount({
     onConnect({ address, connector, isReconnected }) {
       // console.log("Connected", { address, connector, isReconnected });
+      if (isHomePage) {
+        router.push("/create-cipher");
+      }
       sessionStorage.setItem("address", address);
       sessionStorage.setItem("type", "rb");
-      router.push("/create-cipher");
     },
   });
   useEffect(() => {

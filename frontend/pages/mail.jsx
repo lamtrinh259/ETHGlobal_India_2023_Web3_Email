@@ -11,7 +11,63 @@ import { useAccount } from "wagmi";
 import axiosConfig from "../util/axios";
 import { useRouter } from "next/router";
 
+import axios from "axios";
+import { ApolloClient, InMemoryCache, gql } from "apollo-client";
+import { Signer } from "ethers";
 export default function Mail() {
+  const [mailData, setmailData] = useState([]);
+  const [apikey, setApiKey] = useState("");
+  const [contract, setContract] = useState();
+
+  const APIURL =
+    "https://api.studio.thegraph.com/query/60990/cipher_inbox/version/latest";
+
+  const tokensQuery = `
+  query {
+    newEmails(
+      first: 10
+      where: {sender: $sender}
+    ) {
+      id
+      sender
+      receiver
+      encryptedEmail
+    }
+  }
+`;
+
+  const client = new ApolloClient({
+    uri: APIURL,
+    cache: new InMemoryCache(),
+  });
+
+  client
+    .query({
+      query: gql(tokensQuery),
+      variables: {
+        sender: apikey,
+      },
+    })
+    .then((data) => {
+      console.log("Subgraph data: ", data.data);
+      let result = [];
+      for (var i = 0; i < data.data.length; i++) {
+        axios
+          .get("get-message/" + data.data[i].encryptedmessage)
+          .then((resp) => {
+            let data = {
+              sender: fromEmail,
+              receiver: data.data[i].receiver,
+              msg: resp,
+            };
+            result.push(data);
+          });
+      }
+      setmailData(result);
+    })
+    .catch((err) => {
+      console.log("Error fetching data: ", err);
+    });
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
 
@@ -46,11 +102,33 @@ export default function Mail() {
   //     console.error(e);
   //   }
   // };
-  useEffect(() => {
+
+  useEffect(async () => {
     console.log(address);
     if (!address) {
-      // alert("please connect your wallet first");
-      // router.push("/");
+      if (window.ethereum == null) {
+        console.log("MetaMask not installed; using read-only defaults");
+        provider = ethers.getDefaultProvider();
+      } else {
+        provider = new ethers.BrowserProvider(window.ethereum);
+        signer = await provider.getSigner();
+        abi = [
+          "function getTokenIdByAddress(address sender) public view returns (uint256)",
+          "function getTokenName(uint256 tokenId) public view returns (string memory)",
+        ];
+
+        // Create a contract
+        contracts = new Contract(
+          "0xbf3A31163e7DF1fF05dD683f92Cd9F8ac7ecC276",
+          abi,
+          provider
+        );
+        setContract(contracts);
+        decimals = await contract.getTokenIdByAddress(await provider.address);
+        senderName = await contract.getTokenName(decimals);
+        setApiKey(decimals);
+        setFromEmail(senderName);
+      }
     }
   }, []);
   function sendMail() {

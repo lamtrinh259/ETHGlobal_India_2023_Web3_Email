@@ -5,3 +5,10 @@ libs = ["lib"]
 solc = "0.8.20"
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
+# [rpc_endpoints]
+# scroll = "https://rpc.scroll.io"
+# scroll_sepolia = "https://sepolia-rpc.scroll.io"
+
+# [etherscan]
+# scroll = { key = "XN5VTWB95ZTFMNITS4KVWS29T1J62UFIJE", chain=534352  }
+# scroll_sepolia = { key = "XN5VTWB95ZTFMNITS4KVWS29T1J62UFIJE", chain=534351 }

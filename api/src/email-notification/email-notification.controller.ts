@@ -12,15 +12,24 @@ export class EmailNotificationController {
   @Post('send-email')
   async sendEmail(@Body() email: SendEmailDto) {
     try {
-      const bc = new EthersHelper();
-      await this.emailNotificationService.sendEmail(email);
-      return right(Result.ok<string>('yew'));
+      const result = await this.emailNotificationService.sendEmail(email);
+      return right(result);
     } catch (error) {
       console.log(error);
       return left(Result.fail(error));
     }
   }
 
+  @Post('send-email-to-l2')
+  async sendtoweb(@Body() email: SendEmailDto) {
+    try {
+      const result = await this.emailNotificationService.sendtoweb(email);
+      return right(result);
+    } catch (error) {
+      console.log(error);
+      return left(error);
+    }
+  }
   @Post('generate-email-id')
   async generateEmail(@Body() body: GenerateEmailIdDto) {
     try {
@@ -29,7 +38,7 @@ export class EmailNotificationController {
         username,
         publickey,
       );
-      return right(Result.ok(result)).value;
+      return right(result);
     } catch (error) {
       return left(error);
     }
@@ -39,7 +48,7 @@ export class EmailNotificationController {
   async getUserEmail(@Param() key: string) {
     try {
       const result = await this.emailNotificationService.getUserByWallet(key);
-      return right(Result.ok(result)).value;
+      return right(result);
     } catch (error) {
       return left(error);
     }
@@ -50,7 +59,7 @@ export class EmailNotificationController {
     try {
       const result =
         await this.emailNotificationService.getMailsByUserEmailOrWallet(cid);
-      return right(Result.ok(result)).value;
+      return right(result);
     } catch (error) {
       return left(error);
     }

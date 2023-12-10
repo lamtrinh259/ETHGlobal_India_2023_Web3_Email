@@ -65,7 +65,7 @@ export default class EthersHelper {
   constructor() {
     this.provider = new ethers.JsonRpcProvider(
       'https://rpc.public.zkevm-test.net',
-      { chainId: 1442, name: '' },
+      { chainId: 1442 },
     );
   }
 

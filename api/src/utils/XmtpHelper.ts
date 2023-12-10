@@ -14,6 +14,7 @@ export const xmtpUtil = async (message) => {
     throw new Error('User in not in network');
   }
   const conversation = await xmtp.conversations.newConversation(message.to);
+  console.log('Conversation: ' + conversation);
   await conversation.send(message);
   console.log('Conversation sent');
 };

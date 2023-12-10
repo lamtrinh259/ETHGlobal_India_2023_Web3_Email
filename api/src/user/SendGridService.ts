@@ -1,28 +1,26 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 const sgMail = require('@sendgrid/mail');
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 @Injectable()
 export class SendGridService {
   constructor(private readonly httpService: HttpService) {}
 
-  async send() {
-    const msg = {
-      to: 'test@example.com', // Change to your recipient
-      from: 'test@example.com', // Change to your verified sender
-      subject: 'Sending with SendGrid is Fun',
-      text: 'and easy to do anywhere, even with Node.js',
-      html: '<strong>and easy to do anywhere, even with Node.js</strong>',
-    };
-
-    sgMail
-      .send(msg)
-      .then((response) => {
-        console.log(response[0].statusCode);
-        console.log(response[0].headers);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+  async send(email) {
+    try {
+      const msg = {
+        to: email.to, // Change to your recipient
+        from: email.from, // Change to your verified sender
+        subject: email.subject, // Change to your
+        text: 'and easy to do anywhere, even with Node.js',
+        html: email.message,
+      };
+      await sgMail.send(msg);
+    } catch (error) {
+      console.log(JSON.stringify(error));
+    }
   }
 }

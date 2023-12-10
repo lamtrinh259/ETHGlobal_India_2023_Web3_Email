@@ -1,12 +1,20 @@
 import { ethers } from 'ethers';
 import lighthouse from '@lighthouse-web3/sdk';
 const jwt = require('jsonwebtoken');
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 const signAuthMessage = async (privateKey) => {
-  const provider = new ethers.providers.StaticJsonRpcProvider();
-  const signer = new ethers.Wallet(privateKey, provider);
-  const signedMessage = await signer.signMessage(process.env.FILECOIN_API_KEY);
-  return signedMessage;
+  try {
+    const provider = new ethers.JsonRpcProvider();
+    const signer = new ethers.Wallet(privateKey, provider);
+    const signedMessage = await signer.signMessage(
+      process.env.FILECOIN_API_KEY,
+    );
+    return signedMessage;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 export const uploadAttachmentsToFileCoin = async (buffer, to) => {
@@ -42,7 +50,7 @@ export const uploadEmailsToFileCoins = async (data, to, from) => {
     process.env.FILECOIN_API_KEY,
   );
   const cid = uploadResponse.data.Hash;
-  console.log(cid);
+  console.log(cid, 'upload');
   if (to && from) {
     const publicKey = process.env.FILECOIN_PUBLIC_KEY;
     const privateKey = process.env.FILECOIN_PRIVATE_KEY;

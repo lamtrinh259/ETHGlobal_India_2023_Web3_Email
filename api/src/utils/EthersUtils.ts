@@ -63,15 +63,9 @@ export default class EthersHelper {
   private readonly logger = new Logger(EthersHelper.name);
 
   constructor() {
-    this.provider = new ethers.providers.StaticJsonRpcProvider(
+    this.provider = new ethers.JsonRpcProvider(
       'https://rpc.public.zkevm-test.net',
       { chainId: 1442, name: '' },
-    );
-
-    this.contract = new ethers.Contract(
-      contractAddress,
-      contractABI,
-      this.provider,
     );
   }
 
@@ -85,9 +79,25 @@ export default class EthersHelper {
     });
   }
 
-  async triggerNewEmailEvent(recipient, cid) {
-    console.log('Triggering new email event');
-    this.contract.connect(this.provider.signer);
-    this.contract.sendEmail(recipient, cid);
+  async triggerNewEmailEvent(recipient, encryptedEmail) {
+    try {
+      console.log('Triggering new email event');
+      this.contract = new ethers.Contract(
+        contractAddress,
+        contractABI,
+        this.provider.getSigner(),
+      );
+
+      // Trigger the sendEmail function
+      const transaction = await this.contract.sendEmail(
+        recipient,
+        encryptedEmail,
+      );
+      await transaction.wait(); // Wait for the transaction to be mined
+
+      console.log('New email event triggered successfully.');
+    } catch (error) {
+      this.logger.error(`Error triggering new email event: ${error.message}`);
+    }
   }
 }

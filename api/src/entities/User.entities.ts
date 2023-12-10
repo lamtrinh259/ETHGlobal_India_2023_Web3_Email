@@ -4,6 +4,6 @@ export class User {
   @Prop()
   email: string;
   @Prop()
-  publicKey: number;
+  publickey: number;
 }
 export const UserSchema = SchemaFactory.createForClass(User);

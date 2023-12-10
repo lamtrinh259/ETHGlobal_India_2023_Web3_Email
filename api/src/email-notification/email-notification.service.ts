@@ -1,5 +1,9 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { User } from 'src/entities/User.entities';
+import { SendGridService } from 'src/user/SendGridService';
 import EthersHelper from 'src/utils/EthersUtils';
 import {
   uploadAttachmentsToFileCoin,
@@ -18,7 +22,11 @@ export interface Email {
 @Injectable()
 export class EmailNotificationService {
   private ethersUtil: EthersHelper;
-  constructor(private readonly httpService: HttpService) {
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly sendGridService: SendGridService,
+    @InjectModel(User.name) private userModel: Model<User>,
+  ) {
     this.ethersUtil = new EthersHelper();
   }
   async sendEmail(email: Email) {
@@ -28,29 +36,40 @@ export class EmailNotificationService {
         element = await uploadAttachmentsToFileCoin(element, email.to);
       }
     }
-    console.log(email.subject);
-    const cid = await uploadEmailsToFileCoins(
-      { message: email.message, subject: email.subject },
-      email.to,
-      email.from,
-    );
-    //web3 mail sending
+
+    const cid = 21313; //await uploadEmailsToFileCoins(
+    //   { message: email.message, subject: email.subject },
+    //   email.to,
+    //   email.from,
+    // );
+    // //web3 mail sending
     if (email.to.split('@').includes('cipher-inbox.com')) {
       await xmtpUtil(email);
     } else {
-      //web 2 mail sending
+      await this.sendGridService.send(email);
     }
-    await this.ethersUtil.triggerNewEmailEvent(email.to, cid);
+    console.log('bc');
+    // await this.ethersUtil.triggerNewEmailEvent(email.to, cid);
     // to fetch from and to wllet detaild from DB
   }
-  generateEmailId(id) {
-    //generate email id and push to blockchain
-    return true;
+  async generateEmailId(domain, key) {
+    const createdCat = new this.userModel({
+      email: `${domain}@cipher-inbox.com`,
+      publickey: key,
+    });
+    await createdCat.save();
+    return {
+      email: `${domain}@cipher-inbox.com`,
+      publickey: key,
+    };
   }
 
   getUserByWallet(id) {
     //generate email id and push to blockchain
-    return { email: 'test@gmail.com' };
+    return this.userModel
+      .find({ publickey: id })
+      .select('email, publickey')
+      .exec();
   }
   async getMailsByUserEmailOrWallet(email: string) {
     //get all CID from BC
